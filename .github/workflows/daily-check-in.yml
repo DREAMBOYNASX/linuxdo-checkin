@@ -2,7 +2,7 @@ name: Daily Check-in
 
 on:
   schedule:
-    - cron: '0 1 * * 1-5'  # 每周一到周五的1点 UTC 时间执行
+    - cron: '0 1 * * 1-4'  # 每周一到周四的1点 UTC 时间执行
   workflow_dispatch:
 
 jobs:
