@@ -73,8 +73,7 @@ class LinuxDoBrowser:
     def click_one_topic(self, topic_url):
         page = self.context.new_page()
         page.goto(HOME_URL + topic_url)
-        if random.random() < 0.3:  # 0.3 * 30 = 9
-            self.click_like(page)
+        # 已移除点赞功能，什么都不做
         self.browse_post(page)
         page.close()
 
