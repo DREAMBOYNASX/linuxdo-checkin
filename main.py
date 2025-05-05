@@ -61,7 +61,6 @@ class LinuxDoBrowser:
 
     def login(self):
         logger.info("开始登录")
-        # self.page.click(".login-button .d-button-label")
         self.page.goto(LOGIN_URL)
         time.sleep(2)
         self.page.fill("#login-account-name", USERNAME)
@@ -88,8 +87,7 @@ class LinuxDoBrowser:
     def click_one_topic(self, topic_url):
         page = self.context.new_page()
         page.goto(HOME_URL + topic_url)
-        if random.random() < 0.3:  # 0.3 * 30 = 9
-            self.click_like(page)
+        # 浏览帖子，不进行点赞操作
         self.browse_post(page)
         page.close()
 
@@ -122,30 +120,16 @@ class LinuxDoBrowser:
             time.sleep(wait_time)
 
     def run(self):
-        if not self.login(): # 登录
+        if not self.login():  # 登录
             logger.error("登录失败，程序终止")
             sys.exit(1)  # 使用非零退出码终止整个程序
-        
-        if BROWSE_ENABLED:
-            self.click_topic() # 点击主题
-            logger.info("完成浏览任务")
-            
-        self.print_connect_info() # 打印连接信息
-        self.send_notifications(BROWSE_ENABLED) # 发送通知
 
-    def click_like(self, page):
-        try:
-            # 专门查找未点赞的按钮
-            like_button = page.locator('.discourse-reactions-reaction-button[title="点赞此帖子"]').first
-            if like_button:
-                logger.info("找到未点赞的帖子，准备点赞")
-                like_button.click()
-                logger.info("点赞成功")
-                time.sleep(random.uniform(1, 2))
-            else:
-                logger.info("帖子可能已经点过赞了")
-        except Exception as e:
-            logger.error(f"点赞失败: {str(e)}")
+        if BROWSE_ENABLED:
+            self.click_topic()  # 点击主题
+            logger.info("完成浏览任务")
+
+        self.print_connect_info()  # 打印连接信息
+        self.send_notifications(BROWSE_ENABLED)  # 发送通知
 
     def print_connect_info(self):
         logger.info("获取连接信息")
@@ -172,7 +156,7 @@ class LinuxDoBrowser:
         status_msg = "✅每日登录成功"
         if browse_enabled:
             status_msg += " + 浏览任务完成"
-            
+
         if GOTIFY_URL and GOTIFY_TOKEN:
             try:
                 response = requests.post(
